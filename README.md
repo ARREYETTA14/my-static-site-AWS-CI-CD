@@ -66,15 +66,14 @@ This guide walks you through building a simple CI/CD pipeline using GitHub and A
 3. Select **"Build custom pipeline"**
 4. Fill in the following sections:
 
-  📝 Pipeline Configuration
-  **A. Pipeline Settings**
-    - **Pipeline name**: MyWebAppPipeline
-    - **Service role**: Select “New service role”
-    - Leave advanced settings as default
-    - Click **Next**
+📝 Pipeline Configuration
+**A. Pipeline Settings**
+ - **Pipeline name**: MyWebAppPipeline
+ - **Service role**: Select “New service role”
+ - Leave advanced settings as default
+ - Click **Next**
     
-  **B. Source Stage**:
-  
+**B. Source Stage**:
 - **Source provider**: GitHub (Version 2) (GitHub v2 uses OAuth and is better supported)
 - Click **"Connect to GitHub"** and authorize AWS to access your repos
 - Choose your repo: ```my-static-site```
@@ -82,14 +81,13 @@ This guide walks you through building a simple CI/CD pipeline using GitHub and A
 - **Change detection**: GitHub webhooks (auto-trigger on commit)
 - Click **Next**
     
-  **C. Build Stage**
-  
+**C. Build Stage**
 This is optional for static sites — we're skipping it for now.
 - Choose: **Skip build stage**
 - Confirm skip
 - Click **Next**
     
-  **D. Deploy Stage**
+**D. Deploy Stage**
 - Deploy provider: **Amazon S3**
 - Region: (same region as your bucket)
 - Bucket: Select the bucket you created earlier (```mycicdbucket7```)
