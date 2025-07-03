@@ -72,6 +72,7 @@ This guide walks you through building a simple CI/CD pipeline using GitHub and A
     - **Service role**: Select “New service role”
     - Leave advanced settings as default
     - Click **Next**
+    
   **B. Source Stage**
     - **Source provider**: GitHub (Version 2) (GitHub v2 uses OAuth and is better supported)
     - Click **"Connect to GitHub"** and authorize AWS to access your repos
@@ -79,11 +80,13 @@ This guide walks you through building a simple CI/CD pipeline using GitHub and A
     - Choose branch: ```main```
     - **Change detection**: GitHub webhooks (auto-trigger on commit)
     - Click **Next**
+    
   **C. Build Stage**
   This is optional for static sites — we're skipping it for now.
     - Choose: **Skip build stage**
     - Confirm skip
     - Click **Next**
+    
   **D. Deploy Stage**
     - Deploy provider: **Amazon S3**
     - Region: (same region as your bucket)
