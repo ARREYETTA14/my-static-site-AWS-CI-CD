@@ -94,6 +94,7 @@ This is optional for static sites — we're skipping it for now.
 - Extract file before deploy: **YES**
 Why? Because the pipeline will zip your site files during transfer. This option ensures S3 unpacks the zip and shows index.html directly.
 - Click **Next**, then **Create Pipeline**
+
 🎉 AWS will now start the pipeline immediately and attempt the first deployment!
 
 ## 🔥 STEP 4: Test the Pipeline
