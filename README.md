@@ -58,6 +58,7 @@ This guide walks you through building a simple CI/CD pipeline using GitHub and A
   ]
 }
 ```
+
 ## ✅ STEP 3: Set Up CodePipeline (This Is the Main Dish)
 ### 🔧 What to do:
 1. Go to the AWS CodePipeline Console
@@ -72,31 +73,30 @@ This guide walks you through building a simple CI/CD pipeline using GitHub and A
     - Leave advanced settings as default
     - Click **Next**
     
-  **B. Source Stage**
+  **B. Source Stage**:
   
-    - **Source provider**: GitHub (Version 2) (GitHub v2 uses OAuth and is better supported)
-    - Click **"Connect to GitHub"** and authorize AWS to access your repos
-    - Choose your repo: ```my-static-site```
-    - Choose branch: ```main```
-    - **Change detection**: GitHub webhooks (auto-trigger on commit)
-    - Click **Next**
+- **Source provider**: GitHub (Version 2) (GitHub v2 uses OAuth and is better supported)
+- Click **"Connect to GitHub"** and authorize AWS to access your repos
+- Choose your repo: ```my-static-site```
+- Choose branch: ```main```
+- **Change detection**: GitHub webhooks (auto-trigger on commit)
+- Click **Next**
     
   **C. Build Stage**
   
-  This is optional for static sites — we're skipping it for now.
-    - Choose: **Skip build stage**
-    - Confirm skip
-    - Click **Next**
+This is optional for static sites — we're skipping it for now.
+- Choose: **Skip build stage**
+- Confirm skip
+- Click **Next**
     
   **D. Deploy Stage**
-  
-    - Deploy provider: **Amazon S3**
-    - Region: (same region as your bucket)
-    - Bucket: Select the bucket you created earlier (```mycicdbucket7```)
-    - Extract file before deploy: **YES**
-    Why? Because the pipeline will zip your site files during transfer. This option ensures S3 unpacks the zip and shows index.html directly.
-    - Click **Next**, then **Create Pipeline**
-    🎉 AWS will now start the pipeline immediately and attempt the first deployment!
+- Deploy provider: **Amazon S3**
+- Region: (same region as your bucket)
+- Bucket: Select the bucket you created earlier (```mycicdbucket7```)
+- Extract file before deploy: **YES**
+Why? Because the pipeline will zip your site files during transfer. This option ensures S3 unpacks the zip and shows index.html directly.
+- Click **Next**, then **Create Pipeline**
+🎉 AWS will now start the pipeline immediately and attempt the first deployment!
 
 ## 🔥 STEP 4: Test the Pipeline
 Make a small change in your index.html file to confirm the automation works.
