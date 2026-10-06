@@ -1,4 +1,4 @@
-# 🚀 Deploy a Static Website from GitHub to S3 using AWS CodePipeline
+# 🚀 Auto-Deploy Static Website via AWS CodePipeline
 
 This guide walks you through building a simple CI/CD pipeline using GitHub and AWS CodePipeline to automatically deploy a static HTML site to an S3 bucket.
 
@@ -24,26 +24,23 @@ This guide walks you through building a simple CI/CD pipeline using GitHub and A
 
 ## ✅ STEP 2: Create an S3 Bucket for Static Website Hosting
 ### 🔧 What to do:
-1. Go to the S3 Console
+1. Go to the [AWS S3 Console]((https://s3.console.aws.amazon.com/)
 2. Click **"Create bucket"**
-    - Bucket name: mycicdbucket7 (must be globally unique!)
-    - Region: Choose your preferred AWS region (e.g., us-east-1)
+    - **Bucket name**: ``mycicdbucket7`` (must be globally unique!)
+    - **Region**: Choose your preferred AWS region (e.g., ``us-east-1``)
     - Leave other settings as default
-    - Uncheck **"Block all public access"**
-    - Confirm the warning that shows up
-3. After the bucket is created:
-    - Click your bucket name
-    - Go to the **Properties** tab
-    - Scroll to Static website hosting
-      - Enable **static website hosting**
-      - Set:
-          - **Index document**: ```index.html```
-          - **Error document**: (optional) ```error.html```
-      - Save changes
-    - Now go to the **Permissions** tab
-      - Set a bucket policy that allows public read access
-        🛡️ Sample S3 Bucket Policy
-        - Replace ```my-ci-cd-bucket``` with your actual bucket name:
+    - Scroll down to **Block Public Access settings** for this bucket. Uncheck “Block all public access”
+    - Check the box acknowledging the security warning that the bucket contents will become public.
+    - Click **Create bucket**.
+   
+## 🌐 Configure Static Website Hosting & Permissions
+3. Click your newly created bucket name from the S3 list.
+    - Open the **Properties** tab, scroll completely to the bottom to **Static website hosting**, and click Edit.
+    - Select **Enable**.
+    - Set **Index document**: ``index.html``.
+    - Click **Save changes**.
+    - Open the **Permissions** tab and scroll down to **Bucket policy** → click **Edit**.
+    - Paste this exact configuration block *(replace ``mycicdbucket7`` with your exact bucket name if it's different)*:
 ```json
 {
   "Version": "2012-10-17",
@@ -58,42 +55,44 @@ This guide walks you through building a simple CI/CD pipeline using GitHub and A
   ]
 }
 ```
+   - Click **Save changes**.
 
 ## ✅ STEP 3: Set Up CodePipeline (This Is the Main Dish)
 ### 🔧 What to do:
-1. Go to the AWS CodePipeline Console
-2. Click **"Create pipeline"**
+1. Go to the **AWS CodePipeline Console**.
+2. Click **Create pipeline**.
 3. Select **"Build custom pipeline"**
-4. Fill in the following sections:
 
-📝 Pipeline Configuration
 **A. Pipeline Settings**
- - **Pipeline name**: MyWebAppPipeline
- - **Service role**: Select “New service role”
- - Leave advanced settings as default
- - Click **Next**
+ - **Pipeline name**: ``MyWebAppPipeline``
+ - **Pipeline type**: Leave it at the modern default (**V2**).
+ - **Execution mode**: **Queued** (Default)
+ - **Service role**: Choose **New service role**.
+ - Click **Next**.
     
 **B. Source Stage**:
-- **Source provider**: GitHub (Version 2) (GitHub v2 uses OAuth and is better supported)
-- Click **"Connect to GitHub"** and authorize AWS to access your repos
-- Choose your repo: ```my-static-site```
-- Choose branch: ```main```
-- **Change detection**: GitHub webhooks (auto-trigger on commit)
-- Click **Next**
+- **Source provider**: Select **GitHub (Version 2)**.
+- **Connection**: Click **Connect to GitHub**.
+   - Choose **GitHub via GitHub App** if prompted.
+   - Click **Connect to GitHub** in the popup window, sign in, authorize **AWS CodeStar** to view your repositories, and follow the prompts to complete the installation link.
+- **Repository name**: Select your ``my-static-site`` repository.
+- **Branch name**: Select ``main``.
+- **Output artifact format**: Leave as **CodePipeline default**.
+- **Trigger configuration**: Leave as **No filter** (keeps instant push deployment running).
+- Click **Next**.
     
 **C. Build Stage**
-This is optional for static sites — we're skipping it for now.
-- Choose: **Skip build stage**
-- Confirm skip
-- Click **Next**
+- Click **Skip build stage** and confirm the prompt.
     
 **D. Deploy Stage**
-- Deploy provider: **Amazon S3**
-- Region: (same region as your bucket)
-- Bucket: Select the bucket you created earlier (```mycicdbucket7```)
-- Extract file before deploy: **YES**
-Why? Because the pipeline will zip your site files during transfer. This option ensures S3 unpacks the zip and shows index.html directly.
-- Click **Next**, then **Create Pipeline**
+- **Deploy provider**: Select **Amazon S3**
+- **Region**: Select the same region you used for your bucket (e.g., ``us-east-1``)
+- **Bucket**: Select (```mycicdbucket7```)
+- **CRITICAL CONFIGURATION**: Check the box for **Extract file before deploy**.
+- Expand **Additional configuration** at the bottom of the section.
+- **LATEST ACCESSIBILITY UPDATE**: Look for the **Canned ACL** dropdown menu field. Select ``Please select an option`` (leave it completely blank/unselected). Do **NOT** choose ``public-read``. This prevents the ``AccessControlListNotSupported error`` completely since your Bucket Policy from Step 2 manages internet visibility safely.
+- Click **Next**, review your details, and click **Create pipeline**.
+
 
 🎉 AWS will now start the pipeline immediately and attempt the first deployment!
 
@@ -110,17 +109,7 @@ To this:
 <h1>This site auto-deploys from GitHub to AWS S3. Cool, right?</h1>
 ```
 Then:
-1. Commit and push the change to your **GitHub repo**
-2. CodePipeline will auto-detect the change
-3. The Source → **Deploy** stages will run automatically
-4. Your updated site will appear live in your S3 bucket
-
-🔗 **Access Your Live Website**
-Use this URL format:
-```text
-http://<your-bucket-name>.s3-website-<your-region>.amazonaws.com
-```
-Example:
-```text
-http://my-ci-cd-bucket.s3-website-us-east-1.amazonaws.com
-```
+1. Commit and push the updates directly into the ``main`` branch.
+2. CodePipeline will auto-detect the change.
+3. Open the AWS CodePipeline interface—your **Source** and **Deploy** steps will turn green sequentially.
+4. Access your permanent global website address using the **Bucket URL**.
